@@ -66,7 +66,6 @@ export const XmlMapView = (prop: XmlMapViewProp) => {
             >
                 {map_content}
             </MapContainer>
-            {bounds.toBBoxString()}
         </div>
     );
 };
