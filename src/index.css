@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.div_icon {
+  background: rgb(44, 199, 238);
+  height: 2em;
+  width: 2em;
+  border-radius: 1em;
+  overflow: visible;
+}
