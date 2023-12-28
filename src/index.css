@@ -13,9 +13,14 @@ code {
 }
 
 .div_icon {
-  background: rgb(44, 199, 238);
-  height: 2em;
-  width: 2em;
-  border-radius: 1em;
   overflow: visible;
+}
+
+.icon_text {
+  border:solid 0.1em darkcyan;
+  background-color: aquamarine;
+  font-size: 2em;
+  border-radius: 0.2em;
+  padding: 0.2em;
+  font-family: monospace;
 }
