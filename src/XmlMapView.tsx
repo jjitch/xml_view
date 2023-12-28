@@ -1,10 +1,14 @@
 import { CRS, LatLng, divIcon } from "leaflet";
 import L from "leaflet";
-import { MapContainer } from "react-leaflet";
+import { MapContainer, Polyline } from "react-leaflet";
 
 import { useLeafletContext } from "@react-leaflet/core";
 import { useEffect } from "react";
-import { calcTreeNodeLocation, ElementSkelton } from "./DOMTreeLocator";
+import {
+    calcTreeNodeLocation,
+    ElementSkelton,
+    STEP_LNG,
+} from "./DOMTreeLocator";
 
 type XmlMapViewProp = {
     node: Element;
@@ -19,7 +23,7 @@ const ElmMarker = (prop: ElmMarkerProp) => {
     const context = useLeafletContext();
     const d = `
     <div class='div_icon'>
-    ${prop.elm.localName}
+        <span class='icon_text'>${prop.elm.localName}</span>
     </div>
     `;
     const icon = divIcon({ html: d, className: "" });
@@ -38,7 +42,8 @@ const ElmMarker = (prop: ElmMarkerProp) => {
 export const XmlMapView = (prop: XmlMapViewProp) => {
     const domLocation: Array<ElementSkelton> = calcTreeNodeLocation(
         prop.node,
-        new LatLng(0, 0)
+        new LatLng(0, 0),
+        null
     );
     const root = domLocation[0];
     const bounds = root.sub_tree_latlng_bound;
@@ -48,11 +53,42 @@ export const XmlMapView = (prop: XmlMapViewProp) => {
             latlng={elm_skelton.sub_tree_latlng_bound.getNorthWest()}
         />
     ));
+    const tree_rep = domLocation.map(
+        (elm_skelton: ElementSkelton, index: number) => {
+            let positions: Array<LatLng> = [];
+            const node_latlng =
+                elm_skelton.sub_tree_latlng_bound.getNorthWest();
+            if (elm_skelton.parent_latlng_north_west !== null) {
+                const parent_latlng = elm_skelton.parent_latlng_north_west;
+                if (node_latlng.lat !== parent_latlng.lat) {
+                    positions.push(
+                        new LatLng(
+                            parent_latlng.lat,
+                            parent_latlng.lng + STEP_LNG / 2
+                        )
+                    );
+                }
+                positions.push(
+                    new LatLng(
+                        node_latlng.lat,
+                        parent_latlng.lng + STEP_LNG / 2
+                    )
+                );
+            }
+            positions.push(node_latlng);
+            if (elm_skelton.node.children.length) {
+                positions.push(
+                    new LatLng(node_latlng.lat, node_latlng.lng + STEP_LNG / 2)
+                );
+            }
+            return <Polyline positions={positions} />;
+        }
+    );
     return (
         <div>
             <MapContainer
-                center={bounds.getCenter()}
-                zoom={5}
+                center={bounds.getNorthWest()}
+                zoom={6}
                 bounds={bounds}
                 scrollWheelZoom={true}
                 crs={CRS.Simple}
@@ -64,6 +100,7 @@ export const XmlMapView = (prop: XmlMapViewProp) => {
                 }}
                 doubleClickZoom={false}
             >
+                {tree_rep}
                 {map_content}
             </MapContainer>
         </div>
