@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Collapse, Button } from "react-bootstrap";
+import { XmlAttrView } from "./XmlAttrView";
+import { XmlTextView } from "./XmlTextView";
 
 type XmlNodeViewProps = {
     node: Element;
@@ -16,40 +18,28 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
     prop: XmlNodeViewProps
 ) => {
     const [open, setOpen] = useState<boolean>(prop.defaultOpen!);
-    const childArray = Array.from(prop.node.childNodes)
-        .filter(
-            (node, _key, _arr) =>
-                node.nodeType === Node.ELEMENT_NODE ||
-                node.nodeType === Node.ATTRIBUTE_NODE ||
-                node.nodeType === Node.TEXT_NODE
-        )
-        .map((node, _key, _arr) => {
+    const attrContent = Array.from(prop.node.attributes).map((attr) => (
+        <XmlAttrView attr={attr}></XmlAttrView>
+    ));
+
+    const childContent = Array.from(prop.node.childNodes).map((node) => {
             switch (node.nodeType) {
                 case Node.ELEMENT_NODE:
                     return (
                         <XmlElementView
                             node={node as Element}
                             defaultOpen={prop.defaultOpen}
-                        />
+                    ></XmlElementView>
                     );
-                case Node.ATTRIBUTE_NODE:
-                    return <p>attribut</p>;
                 case Node.TEXT_NODE:
-                    return (
-                        <div
-                            className="text-wrap font-monospace"
-                            style={{ width: "30rem" }}
-                        >
-                            TEXT {node.textContent}
-                        </div>
-                    );
+                const textNode = node as Text;
+                return <XmlTextView text={textNode.data}></XmlTextView>;
                 default:
-                    return undefined;
+                return null;
             }
         });
     return (
-        <>
-            <div style={ElementViewStyle}>
+        <li style={ElementViewStyle}>
                 <Button
                     onClick={() => setOpen(!open)}
                     aria-controls="elm-content"
@@ -59,9 +49,11 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                     {prop.node.localName}
                 </Button>
                 <Collapse in={open}>
-                    <div id="elm-content">{childArray}</div>
+                <ul id="elm-content">
+                    {attrContent}
+                    {childContent}
+                </ul>
                 </Collapse>
-            </div>
-        </>
+        </li>
     );
 };
