@@ -8,12 +8,12 @@ import { XPathNavigator } from "./XPathNavigator";
 
 function App() {
     const [xmlContent, setXmlcontent] = useState<string>("");
-
+    const [xpathExpr, setXPathExpr] = useState<XPathExpression | null>(null);
     return (
         <>
             <XmlForm onFileUploaded={setXmlcontent} />
-            <XPathNavigator />
-            <XmlDocView content={xmlContent} />
+            <XPathNavigator setExpr={setXPathExpr} />
+            <XmlDocView content={xmlContent} xpathExpr={xpathExpr} />
         </>
     );
 }

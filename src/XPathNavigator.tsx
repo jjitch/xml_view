@@ -1,16 +1,25 @@
 import { useState, ChangeEvent } from "react";
 import { Form } from "react-bootstrap";
 
-export const XPathNavigator = () => {
+type XPathNavigatorProp = {
+    setExpr: (expr: XPathExpression | null) => void;
+};
+
+export const XPathNavigator: React.FC<XPathNavigatorProp> = (
+    prop: XPathNavigatorProp
+) => {
     const [valid, setValid] = useState<boolean>(true);
     const validateXPath = (e: ChangeEvent<HTMLInputElement>) => {
         try {
             if (e.target.value) {
-                document.createExpression(e.target.value);
+                console.log(e.target.value);
+                prop.setExpr(document.createExpression(e.target.value));
+            } else {
+                prop.setExpr(null);
             }
             setValid(true);
-        } catch (e) {
-            console.log(e);
+        } catch (_) {
+            prop.setExpr(null);
             setValid(false);
         }
     };
