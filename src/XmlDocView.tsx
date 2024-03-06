@@ -1,4 +1,4 @@
-import { XmlMapView } from "./XmlMapView";
+import { XmlElementView } from "./XmlElementView";
 
 interface XmlDocViewProps {
     content: string;
@@ -11,7 +11,7 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
     const root = xmlDoc.documentElement as Element;
     return (
         <div style={{ margin: "40px" }}>
-            <XmlMapView node={root} />
+            <XmlElementView node={root as Element} defaultOpen={true} />
         </div>
     );
 };
