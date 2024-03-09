@@ -19,9 +19,10 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
     prop: XmlNodeViewProps
 ) => {
     const [open, setOpen] = useState<boolean>(prop.defaultOpen!);
-    const attrContent = Array.from(prop.node.attributes).map((attr) => (
-        <XmlAttrView attr={attr}></XmlAttrView>
-    ));
+    const attrContent = Array.from(prop.node.attributes).map((attr) => {
+        const matched = prop.matchedNodeSet.has(attr);
+        return <XmlAttrView attr={attr} matched={matched}></XmlAttrView>;
+    });
 
     const childContent = Array.from(prop.node.childNodes).map((node) => {
         switch (node.nodeType) {
@@ -34,24 +35,29 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                     ></XmlElementView>
                 );
             case Node.TEXT_NODE:
+                const matched = prop.matchedNodeSet.has(node);
                 const textNode = node as Text;
-                return <XmlTextView text={textNode.data}></XmlTextView>;
+                return (
+                    <XmlTextView
+                        text={textNode.data}
+                        matched={matched}
+                    ></XmlTextView>
+                );
             default:
                 return null;
         }
     });
     return (
-        <li
-            style={ElementViewStyle}
-            className={prop.matchedNodeSet.has(prop.node) ? "matched" : ""}
-        >
+        <li style={ElementViewStyle}>
             <Button
                 onClick={() => setOpen(!open)}
                 aria-controls="elm-content"
                 aria-expanded={open}
-                className="rounded-pill"
+                className={`btn ${
+                    prop.matchedNodeSet.has(prop.node) ? "btn-success" : ""
+                }`}
             >
-                {prop.node.localName}
+                {prop.node.nodeName}
             </Button>
             <Collapse in={open}>
                 <ul id="elm-content">
