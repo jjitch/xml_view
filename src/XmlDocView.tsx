@@ -1,31 +1,35 @@
+import { useState } from "react";
 import { XmlElementView } from "./XmlElementView";
+import { XPathNavigator } from "./XPathNavigator";
 
 interface XmlDocViewProps {
     content: string;
-    xpathExpr: XPathExpression | null;
 }
 
 const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
+    const [xpathExpr, setXPathExpr] = useState<XPathExpression | null>(null);
     if (prop.content === "") return <></>;
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(prop.content, "text/xml");
-    const root = xmlDoc.documentElement as Element;
-    const res = prop.xpathExpr?.evaluate(
-        root as Node,
-        XPathResult.UNORDERED_NODE_ITERATOR_TYPE,
-        null
-    );
     let nodeSet = new Set<Node>();
-    if (res) {
-        let n = null;
-        while ((n = res.iterateNext())) {
-            nodeSet.add(n);
+    let parser = new DOMParser();
+    let xmlDoc = parser.parseFromString(prop.content, "application/xml");
+    const root = xmlDoc.documentElement as Element;
+    if (xpathExpr) {
+        const res = xpathExpr.evaluate(
+            xmlDoc,
+            XPathResult.ORDERED_NODE_ITERATOR_TYPE,
+            null
+        );
+        if (res) {
+            let n = null;
+            while ((n = res.iterateNext())) {
+                nodeSet.add(n);
+            }
         }
     }
-
     return (
         <div style={{ margin: "40px" }}>
-            <p>{nodeSet.size}</p>
+            <XPathNavigator contextDocument={xmlDoc} setExpr={setXPathExpr} />
+            <p>Found node count: {nodeSet.size}</p>
             <XmlElementView
                 node={root}
                 defaultOpen={true}
