@@ -31,11 +31,11 @@ export const XPathNavigator: React.FC<XPathNavigatorProp> = (
         }
     };
     return (
-        <>
+        <Form style={{}}>
             <Form.Control onChange={validateXPath} />
             <Form.Text className="font-monospace">
                 {valid ? "" : "This XPath is invalid"}
             </Form.Text>
-        </>
+        </Form>
     );
 };
