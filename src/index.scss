@@ -1,0 +1,70 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.matched {
+  background-color: aqua;
+}
+
+$ident: 20px;
+$left: -($ident);
+$border: #ddd;
+$border-hover: #aaa;
+$bg-hover: #eee;
+$text: #888;
+$text-hover: #000;
+ul {
+  margin-left: $ident;
+}
+li {
+  list-style-type: none;
+  margin: 10px 0 10px 10px;
+  position: relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: $left;
+    border-left: 1px solid $border;
+    border-bottom: 1px solid $border;
+    width: $ident;
+    height: 15px;
+  }
+
+  &:first-of-type:before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -20px;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    width: 20px;
+    height: 30px;
+  }
+
+  &:after {
+    position: absolute;
+    content: "";
+    top: 20px;
+    left: $left;
+    border-left: 1px solid $border;
+    border-top: 1px solid $border;
+    width: $ident;
+    height: 100%;
+  }
+
+  &:last-child:after {
+    display: none;
+  }
+}
