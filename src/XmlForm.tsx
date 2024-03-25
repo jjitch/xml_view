@@ -25,7 +25,7 @@ const XmlForm: React.FC<XmlFormProps> = (prop: XmlFormProps) => {
                 <Form.Group className="mb-3">
                     <Form.Control
                         type="file"
-                        accept=".xml"
+                        // accept=".xml"
                         onChange={handleFileChange}
                     />
                 </Form.Group>
