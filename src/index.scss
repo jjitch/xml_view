@@ -16,55 +16,51 @@ code {
   background-color: aqua;
 }
 
-$ident: 20px;
+$ident: 1em;
 $left: -($ident);
-$border: #ddd;
-$border-hover: #aaa;
-$bg-hover: #eee;
-$text: #888;
-$text-hover: #000;
+$tree-guide-color: #444;
+$tree-guide-widht: 2px;
+
 ul {
   margin-left: $ident;
 }
+
 li {
   list-style-type: none;
-  margin: 10px 0 10px 10px;
   position: relative;
-
+  margin: 0em;
   &:before {
     content: "";
     position: absolute;
-    top: 5px;
+    top: 0em;
     left: $left;
-    border-left: 1px solid $border;
-    border-bottom: 1px solid $border;
+    border-bottom: $tree-guide-widht / 2 solid $tree-guide-color;
     width: $ident;
-    height: 15px;
+    height: 1em;
   }
 
   &:first-of-type:before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: -20px;
-    border-left: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    width: 20px;
-    height: 30px;
+    border-left: $tree-guide-widht solid $tree-guide-color;
   }
 
   &:after {
-    position: absolute;
     content: "";
-    top: 20px;
+    position: absolute;
+    top: 1em;
     left: $left;
-    border-left: 1px solid $border;
-    border-top: 1px solid $border;
+    border-left: $tree-guide-widht solid $tree-guide-color;
+    border-top: $tree-guide-widht / 2 solid $tree-guide-color;
     width: $ident;
     height: 100%;
   }
 
   &:last-child:after {
-    display: none;
+    height: 0;
+  }
+
+  &:not(ul > li) {
+    &:after, &:before {
+      display: none;
+    }
   }
 }

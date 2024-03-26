@@ -9,12 +9,6 @@ type XmlNodeViewProps = {
     matchedNodeSet: Set<Node>;
 };
 
-const ElementViewStyle = {
-    margin: "2px",
-    padding: "0",
-    // border: "3px solid #268811",
-};
-
 export const XmlElementView: React.FC<XmlNodeViewProps> = (
     prop: XmlNodeViewProps
 ) => {
@@ -48,17 +42,15 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
         }
     });
     return (
-        <li style={ElementViewStyle}>
-            <Button
+        <li>
+            <span
                 onClick={() => setOpen(!open)}
                 aria-controls="elm-content"
                 aria-expanded={open}
-                className={`btn ${
-                    prop.matchedNodeSet.has(prop.node) ? "btn-success" : ""
-                }`}
+                className={prop.matchedNodeSet.has(prop.node) ? "matched" : ""}
             >
                 {prop.node.nodeName}
-            </Button>
+            </span>
             <Collapse in={open}>
                 <ul id="elm-content">
                     {attrContent}
