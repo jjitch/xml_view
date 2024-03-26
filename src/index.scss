@@ -23,7 +23,7 @@ $tree-guide-widht: 2px;
 
 ul {
   margin-left: $ident;
-}
+  }
 
 li {
   list-style-type: none;
@@ -34,7 +34,7 @@ li {
     position: absolute;
     top: 0em;
     left: $left;
-    border-bottom: $tree-guide-widht / 2 solid $tree-guide-color;
+    border-bottom: calc($tree-guide-widht / 2) solid $tree-guide-color;
     width: $ident;
     height: 1em;
   }
@@ -49,7 +49,7 @@ li {
     top: 1em;
     left: $left;
     border-left: $tree-guide-widht solid $tree-guide-color;
-    border-top: $tree-guide-widht / 2 solid $tree-guide-color;
+    border-top: calc($tree-guide-widht / 2) solid $tree-guide-color;
     width: $ident;
     height: 100%;
   }
@@ -62,5 +62,14 @@ li {
     &:after, &:before {
       display: none;
     }
+  }
+}
+
+.collapse-switch {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 3px;
+  &:hover {
+    background-color: green;
   }
 }

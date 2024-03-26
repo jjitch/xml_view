@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Collapse, Button } from "react-bootstrap";
+import { Collapse } from "react-bootstrap";
 import { XmlAttrView } from "./XmlAttrView";
 import { XmlTextView } from "./XmlTextView";
+import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
 
 type XmlNodeViewProps = {
     node: Element;
@@ -44,12 +45,17 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
     return (
         <li>
             <span
-                onClick={() => setOpen(!open)}
-                aria-controls="elm-content"
-                aria-expanded={open}
                 className={prop.matchedNodeSet.has(prop.node) ? "matched" : ""}
             >
                 {prop.node.nodeName}
+            </span>
+            <span
+                onClick={() => setOpen(!open)}
+                aria-controls="elm-content"
+                aria-expanded={open}
+                className="collapse-switch"
+            >
+                {open ? <BsArrowsCollapse /> : <BsArrowsExpand />}
             </span>
             <Collapse in={open}>
                 <ul id="elm-content">
