@@ -6,8 +6,10 @@ export const XmlAttrView: React.FC<XmlAttrViewProps> = (
     prop: XmlAttrViewProps
 ) => {
     return (
-        <li className={prop.matched ? "matched" : ""}>
-            {prop.attr.name}: {prop.attr.value}
+        <li>
+            <span className={prop.matched ? "matched" : ""}>
+                {prop.attr.name}: {prop.attr.value}
+            </span>
         </li>
     );
 };
