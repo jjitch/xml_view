@@ -93,7 +93,7 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
             <XmlElementView
                 node={root}
                 defaultOpen={true}
-                matchedNodeSet={nodeRefSet}
+                matchedNodeSet={nodeSet}
             />
         </div>
     );
