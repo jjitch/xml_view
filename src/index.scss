@@ -67,9 +67,15 @@ li {
 
 .collapse-switch {
   cursor: pointer;
-  display: inline-block;
-  margin-left: 3px;
+  margin-left: 0.5em;
+  border-radius: 0.5em;
+  transition: 0.3s;
   &:hover {
-    background-color: green;
+    outline: 2px solid gray;
+    outline-offset: -2px;
   }
+}
+
+.expand-on {
+  transform: rotate(90deg);
 }

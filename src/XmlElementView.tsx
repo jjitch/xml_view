@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Collapse } from "react-bootstrap";
 import { XmlAttrView } from "./XmlAttrView";
 import { XmlTextView } from "./XmlTextView";
-import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
+import { FiChevronDown } from "react-icons/fi";
 
 type XmlNodeViewProps = {
     node: Element;
@@ -49,14 +49,12 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
             >
                 {prop.node.nodeName}
             </span>
-            <span
+            <FiChevronDown
                 onClick={() => setOpen(!open)}
                 aria-controls="elm-content"
                 aria-expanded={open}
-                className="collapse-switch"
-            >
-                {open ? <BsArrowsCollapse /> : <BsArrowsExpand />}
-            </span>
+                className={`collapse-switch ${open ? "" : "expand-on"}`}
+            />
             <Collapse in={open}>
                 <ul id="elm-content">
                     {attrContent}
