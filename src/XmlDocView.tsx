@@ -62,7 +62,7 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
         }
     }
     return (
-        <div style={{ margin: "40px" }}>
+        <div style={{ margin: "2em" }}>
             <div>
                 <span>This form accepts serach query.</span>
                 <XPathNavigator

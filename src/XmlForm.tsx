@@ -29,11 +29,7 @@ const XmlForm: React.FC<XmlFormProps> = (prop: XmlFormProps) => {
                         onChange={handleFileChange}
                     />
                 </Form.Group>
-                <Button
-                    className="mb-4"
-                    variant="primary"
-                    onClick={handleUpload}
-                >
+                <Button variant="primary" onClick={handleUpload}>
                     Submit!
                 </Button>
             </Form>
