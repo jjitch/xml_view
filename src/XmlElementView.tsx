@@ -42,6 +42,8 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                 return null;
         }
     });
+    const noChild: boolean =
+        childContent.length === 0 && attrContent.length === 0;
     return (
         <li>
             <span
@@ -51,12 +53,14 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
             >
                 {prop.node.nodeName}
             </span>
-            <FiChevronDown
-                onClick={() => setOpen(!open)}
-                aria-controls="elm-content"
-                aria-expanded={open}
-                className={`collapse-switch ${open ? "" : "expand-on"}`}
-            />
+            {noChild ? null : (
+                <FiChevronDown
+                    onClick={() => setOpen(!open)}
+                    aria-controls="elm-content"
+                    aria-expanded={open}
+                    className={`collapse-switch ${open ? "" : "expand-on"}`}
+                />
+            )}
             <Collapse in={open}>
                 <ul id="elm-content">
                     {attrContent}
