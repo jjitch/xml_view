@@ -13,7 +13,7 @@ type XmlNodeViewProps = {
 export const XmlElementView: React.FC<XmlNodeViewProps> = (
     prop: XmlNodeViewProps
 ) => {
-    const [open, setOpen] = useState<boolean>(prop.defaultOpen!);
+    const [open, setOpen] = useState<boolean>(prop.defaultOpen);
     const attrContent = Array.from(prop.node.attributes).map((attr) => {
         const matched = prop.matchedNodeSet.has(attr);
         return <XmlAttrView attr={attr} matched={matched}></XmlAttrView>;
@@ -25,7 +25,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                 return (
                     <XmlElementView
                         node={node as Element}
-                        defaultOpen={prop.defaultOpen}
+                        defaultOpen={open}
                         matchedNodeSet={prop.matchedNodeSet}
                     ></XmlElementView>
                 );
