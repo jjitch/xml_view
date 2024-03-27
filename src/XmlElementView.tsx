@@ -45,7 +45,9 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
     return (
         <li>
             <span
-                className={prop.matchedNodeSet.has(prop.node) ? "matched" : ""}
+                className={`element-rep node-rep ${
+                    prop.matchedNodeSet.has(prop.node) ? "matched" : ""
+                }`}
             >
                 {prop.node.nodeName}
             </span>

@@ -79,3 +79,42 @@ li {
 .expand-on {
   transform: rotate(90deg);
 }
+
+.node-rep {
+  &:before {
+    color: #333;
+    font-family: monospace;
+    border-radius: 2px;
+    outline-width: 2px;
+    outline-style: solid;
+    outline-offset: -2px;
+    padding: 0 0.2em;
+    margin-right: 0.2em;
+    width: 1.2em;
+    text-align: center;
+  }
+}
+
+.element-rep {
+  &:before {
+    content: "E";
+    background-color: #aaffaa;
+    outline-color: #88ff88;
+  }
+}
+
+.attribute-rep {
+  &:before {
+    content: "A";
+    background-color: #ffaaaa;
+    outline-color: #ff8888;
+  }
+}
+
+.text-rep {
+  &:before {
+    content: "T";
+    background-color: #aaaaff;
+    outline-color: #8888ff;
+  }
+}

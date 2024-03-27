@@ -90,11 +90,18 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
                 </Col>
             </Row>
             <p>Ref count {node2reference.size}</p>
-            <XmlElementView
-                node={root}
-                defaultOpen={true}
-                matchedNodeSet={nodeSet}
-            />
+            <div
+                style={{
+                    width: "80%",
+                    margin: "0 auto",
+                }}
+            >
+                <XmlElementView
+                    node={root}
+                    defaultOpen={true}
+                    matchedNodeSet={nodeSet}
+                />
+            </div>
         </div>
     );
 };

@@ -9,7 +9,11 @@ export const XmlTextView: React.FC<XmlTextViewProp> = (
     const content = prop.text.trim();
     return content.length ? (
         <li>
-            <span className={prop.matched ? "matched" : ""}>{content}</span>
+            <span
+                className={`text-rep node-rep ${prop.matched ? "matched" : ""}`}
+            >
+                {content}
+            </span>
         </li>
     ) : null;
 };
