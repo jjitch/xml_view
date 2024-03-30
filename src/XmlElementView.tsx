@@ -14,12 +14,18 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
     prop: XmlNodeViewProps
 ) => {
     const [open, setOpen] = useState<boolean>(prop.defaultOpen);
-    const attrContent = Array.from(prop.node.attributes).map((attr) => {
+    const attrContent = Array.from(prop.node.attributes).map((attr, index) => {
         const matched = prop.matchedNodeSet.has(attr);
-        return <XmlAttrView attr={attr} matched={matched}></XmlAttrView>;
+        return (
+            <XmlAttrView
+                key={`a-${index}`}
+                attr={attr}
+                matched={matched}
+            ></XmlAttrView>
+        );
     });
 
-    const childContent = Array.from(prop.node.childNodes).map((node) => {
+    const childContent = Array.from(prop.node.childNodes).map((node, index) => {
         switch (node.nodeType) {
             case Node.ELEMENT_NODE:
                 return (
@@ -27,6 +33,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                         node={node as Element}
                         defaultOpen={open}
                         matchedNodeSet={prop.matchedNodeSet}
+                        key={`e-${index}`}
                     ></XmlElementView>
                 );
             case Node.TEXT_NODE:
@@ -34,6 +41,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                 const textNode = node as Text;
                 return (
                     <XmlTextView
+                        key={`t-${index}`}
                         text={textNode.data}
                         matched={matched}
                     ></XmlTextView>
