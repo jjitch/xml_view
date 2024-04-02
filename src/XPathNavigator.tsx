@@ -3,6 +3,7 @@ import { Form } from "react-bootstrap";
 
 type XPathNavigatorProp = {
     setExpr: (expr: XPathExpression | null) => void;
+    onKeyDownHandler: React.KeyboardEventHandler;
     contextDocument: Document;
 };
 
@@ -31,9 +32,16 @@ export const XPathNavigator: React.FC<XPathNavigatorProp> = (
         }
     };
     return (
-        <Form style={{}}>
-            <Form.Control onChange={validateXPath} />
-            <Form.Text className="font-monospace">
+        <Form>
+            <Form.Control
+                onChange={validateXPath}
+                onKeyDown={prop.onKeyDownHandler}
+                placeholder="XPath Serach"
+            />
+            <Form.Text
+                className="font-monospace"
+                style={{ height: "1em", display: "block" }}
+            >
                 {valid ? "" : "This XPath is invalid"}
             </Form.Text>
         </Form>

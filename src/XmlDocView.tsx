@@ -2,7 +2,8 @@ import { useState } from "react";
 import { XmlElementView } from "./XmlElementView";
 import { XPathNavigator } from "./XPathNavigator";
 import { GetTextRep } from "./NodeTextRep";
-import { Col, Row } from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
+import { BsSearch } from "react-icons/bs";
 
 interface XmlDocViewProps {
     content: string;
@@ -11,8 +12,8 @@ interface XmlDocViewProps {
 function getXPathNode(
     xpathExpr: XPathExpression,
     contextNode: Node
-): Set<Node> {
-    let nodeSet = new Set<Node>();
+): Map<number, Node> {
+    let nodeMap = new Map<number, Node>();
     if (xpathExpr) {
         const res = xpathExpr.evaluate(
             contextNode,
@@ -21,75 +22,54 @@ function getXPathNode(
         );
         if (res) {
             let n = null;
+            let i = 0;
             while ((n = res.iterateNext())) {
-                nodeSet.add(n);
+                nodeMap.set(i, n);
+                i += 1;
             }
         }
     }
-    return nodeSet;
+    return nodeMap;
 }
 
 const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
     const [xpathExpr, setXPathExpr] = useState<XPathExpression | null>(null);
-    const [refExpr, setRefExpr] = useState<XPathExpression | null>(null);
-    const [receiveExpr, setReceiveExpr] = useState<XPathExpression | null>(
-        null
-    );
+    const [searchIndex, setSearchIndex] = useState<number>(0);
+    const [focusedNode, setFocusNode] = useState<Node | null>(null);
     if (prop.content === "") return <></>;
     let parser = new DOMParser();
     let xmlDoc = parser.parseFromString(prop.content, "application/xml");
     const root = xmlDoc.documentElement as Element;
-    let nodeSet = xpathExpr ? getXPathNode(xpathExpr, xmlDoc) : new Set<Node>();
-    let nodeRefSet = refExpr ? getXPathNode(refExpr, xmlDoc) : new Set<Node>();
-    let receiveSet = receiveExpr
-        ? getXPathNode(receiveExpr, xmlDoc)
-        : new Set<Node>();
-    let text2node: Map<string, Node> = new Map<string, Node>();
-    for (const node of receiveSet) {
-        const textRep = GetTextRep(node);
-        if (textRep) text2node.set(textRep, node);
-    }
-    let node2reference = new Map<Node, Set<Node>>();
-    for (const node of nodeRefSet) {
-        const textRep = GetTextRep(node);
-        if (!textRep) continue;
-        const refered_node = text2node.get(textRep);
-        if (!refered_node) continue;
-        if (node2reference.has(node)) {
-            node2reference.get(node)?.add(refered_node);
-        } else {
-            node2reference.set(node, new Set<Node>([refered_node]));
+    let nodeMap = xpathExpr
+        ? getXPathNode(xpathExpr, xmlDoc)
+        : new Map<number, Node>();
+    let nodeSet: Set<Node> = new Set<Node>(nodeMap.values());
+
+    const onKeyDownHandler = (event: React.KeyboardEvent) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            if (nodeSet.size === 0) return;
+            const diff = event.shiftKey ? -1 : 1;
+            const newIndex = (searchIndex + nodeSet.size + diff) % nodeSet.size;
+            setSearchIndex(newIndex);
+            setFocusNode(nodeMap.get(newIndex)!);
         }
-    }
+    };
     return (
-        <div style={{ margin: "2em" }}>
-            <div>
-                <span>This form accepts serach query.</span>
+        <div>
+            <Navbar sticky="top" bg="light" className="justify-content-end">
+                <Navbar.Brand>
+                    <BsSearch />
+                </Navbar.Brand>
                 <XPathNavigator
                     contextDocument={xmlDoc}
                     setExpr={setXPathExpr}
+                    onKeyDownHandler={onKeyDownHandler}
                 />
-                <p>Found node count: {nodeSet.size}</p>
-            </div>
-            <Row>
-                <Col>
-                    <span>This form accepts ref query.</span>
-                    <XPathNavigator
-                        contextDocument={xmlDoc}
-                        setExpr={setRefExpr}
-                    />
-                    <p>Found node count: {nodeRefSet.size}</p>
-                </Col>
-                <Col>
-                    <span>This form accepts referred query.</span>
-                    <XPathNavigator
-                        contextDocument={xmlDoc}
-                        setExpr={setReceiveExpr}
-                    />
-                    <p>Found node count: {receiveSet.size}</p>
-                </Col>
-            </Row>
-            <p>Ref count {node2reference.size}</p>
+                <Navbar.Text style={{ width: "10em", marginLeft: "0.5em" }}>
+                    {nodeSet.size ? `${searchIndex + 1} / ${nodeSet.size}` : ""}
+                </Navbar.Text>
+            </Navbar>
             <div
                 style={{
                     width: "80%",
