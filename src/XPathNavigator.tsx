@@ -36,7 +36,7 @@ export const XPathNavigator: React.FC<XPathNavigatorProp> = (
             <Form.Control
                 onChange={validateXPath}
                 onKeyDown={prop.onKeyDownHandler}
-                placeholder="XPath Serach"
+                placeholder="XPath Search"
             />
             <Form.Text
                 className="font-monospace"
