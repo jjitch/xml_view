@@ -8,6 +8,9 @@ type XmlNodeViewProps = {
     node: Element;
     defaultOpen: boolean;
     matchedNodeSet: Set<Node>;
+    setDomRefCreator: (
+        xmlNode: Node
+    ) => (domElement: HTMLElement | null) => void;
 };
 
 export const XmlElementView: React.FC<XmlNodeViewProps> = (
@@ -21,6 +24,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                 key={`a-${index}`}
                 attr={attr}
                 matched={matched}
+                setDomRef={prop.setDomRefCreator(attr as Node)}
             ></XmlAttrView>
         );
     });
@@ -34,6 +38,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                         defaultOpen={open}
                         matchedNodeSet={prop.matchedNodeSet}
                         key={`e-${index}`}
+                        setDomRefCreator={prop.setDomRefCreator}
                     ></XmlElementView>
                 );
             case Node.TEXT_NODE:
@@ -44,6 +49,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                         key={`t-${index}`}
                         text={textNode.data}
                         matched={matched}
+                        setDomRef={prop.setDomRefCreator(node)}
                     ></XmlTextView>
                 );
             default:
@@ -53,7 +59,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
     const noChild: boolean =
         childContent.length === 0 && attrContent.length === 0;
     return (
-        <li>
+        <li ref={prop.setDomRefCreator(prop.node)}>
             <span
                 className={`element-rep node-rep ${
                     prop.matchedNodeSet.has(prop.node) ? "matched" : ""

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { XmlElementView } from "./XmlElementView";
 import { XPathNavigator } from "./XPathNavigator";
-import { GetTextRep } from "./NodeTextRep";
 import { Navbar } from "react-bootstrap";
 import { BsSearch } from "react-icons/bs";
 
@@ -10,10 +9,10 @@ interface XmlDocViewProps {
 }
 
 function getXPathNode(
-    xpathExpr: XPathExpression,
+    xpathExpr: XPathExpression | null,
     contextNode: Node
-): Map<number, Node> {
-    let nodeMap = new Map<number, Node>();
+): Array<Node> {
+    let nodeArray = new Array<Node>();
     if (xpathExpr) {
         const res = xpathExpr.evaluate(
             contextNode,
@@ -22,28 +21,35 @@ function getXPathNode(
         );
         if (res) {
             let n = null;
-            let i = 0;
             while ((n = res.iterateNext())) {
-                nodeMap.set(i, n);
-                i += 1;
+                nodeArray.push(n);
             }
         }
     }
-    return nodeMap;
+    return nodeArray;
 }
 
 const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
     const [xpathExpr, setXPathExpr] = useState<XPathExpression | null>(null);
     const [searchIndex, setSearchIndex] = useState<number>(0);
-    const [focusedNode, setFocusNode] = useState<Node | null>(null);
-    if (prop.content === "") return <></>;
+    const treeDomRef = useRef<Map<Node, HTMLElement>>(new Map());
+    const setDomRefCreator: (
+        xmlNode: Node
+    ) => (domNode: HTMLElement | null) => void = (xmlNode: Node) => {
+        return (domNode: HTMLElement | null) => {
+            if (domNode) {
+                treeDomRef.current.set(xmlNode, domNode);
+            } else {
+                treeDomRef.current.delete(xmlNode);
+            }
+        };
+    };
+
     let parser = new DOMParser();
     let xmlDoc = parser.parseFromString(prop.content, "application/xml");
     const root = xmlDoc.documentElement as Element;
-    let nodeMap = xpathExpr
-        ? getXPathNode(xpathExpr, xmlDoc)
-        : new Map<number, Node>();
-    let nodeSet: Set<Node> = new Set<Node>(nodeMap.values());
+    let nodeArray = getXPathNode(xpathExpr, xmlDoc);
+    let nodeSet: Set<Node> = new Set<Node>(nodeArray);
 
     const onKeyDownHandler = (event: React.KeyboardEvent) => {
         if (event.key === "Enter") {
@@ -52,7 +58,7 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
             const diff = event.shiftKey ? -1 : 1;
             const newIndex = (searchIndex + nodeSet.size + diff) % nodeSet.size;
             setSearchIndex(newIndex);
-            setFocusNode(nodeMap.get(newIndex)!);
+            treeDomRef.current.get(nodeArray.at(newIndex)!)?.scrollIntoView();
         }
     };
     return (
@@ -80,6 +86,7 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
                     node={root}
                     defaultOpen={true}
                     matchedNodeSet={nodeSet}
+                    setDomRefCreator={setDomRefCreator}
                 />
             </div>
         </div>
