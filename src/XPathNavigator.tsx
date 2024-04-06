@@ -34,6 +34,7 @@ export const XPathNavigator: React.FC<XPathNavigatorProp> = (
     return (
         <Form>
             <Form.Control
+                style={{ width: "50vw" }}
                 onChange={validateXPath}
                 onKeyDown={prop.onKeyDownHandler}
                 placeholder="XPath Search"
