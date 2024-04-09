@@ -10,7 +10,7 @@ export const XmlAttrView: React.FC<XmlAttrViewProps> = (
         <li ref={prop.setDomRef}>
             <span
                 className={`attribute-rep node-rep ${
-                    prop.matched ? "matched" : ""
+                    prop.matched && "matched"
                 }`}
             >
                 {prop.attr.name}: {prop.attr.value}

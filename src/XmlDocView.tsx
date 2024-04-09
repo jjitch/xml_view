@@ -55,7 +55,9 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
             const diff = event.shiftKey ? -1 : 1;
             const newIndex = (searchIndex + nodeSet.size + diff) % nodeSet.size;
             setSearchIndex(newIndex);
-            treeDomRef.current.get(nodeArray.at(newIndex)!)?.scrollIntoView();
+            treeDomRef.current
+                .get(nodeArray.at(newIndex)!)
+                ?.scrollIntoView({ inline: "center", block: "center" });
         }
     };
     return (

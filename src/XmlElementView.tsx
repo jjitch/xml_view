@@ -59,11 +59,12 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
     const noChild: boolean =
         childContent.length === 0 && attrContent.length === 0;
     return (
-        <li ref={prop.setDomRefCreator(prop.node)}>
+        <li>
             <span
                 className={`element-rep node-rep ${
-                    prop.matchedNodeSet.has(prop.node) ? "matched" : ""
+                    prop.matchedNodeSet.has(prop.node) && "matched"
                 }`}
+                ref={prop.setDomRefCreator(prop.node)}
             >
                 {prop.node.nodeName}
             </span>
@@ -72,7 +73,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                     onClick={() => setOpen(!open)}
                     aria-controls="elm-content"
                     aria-expanded={open}
-                    className={`collapse-switch ${open ? "" : "expand-on"}`}
+                    className={`collapse-switch ${open || "expand-on"}`}
                 />
             )}
             <Collapse in={open}>
