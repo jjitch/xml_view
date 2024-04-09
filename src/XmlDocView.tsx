@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
 import { XmlElementView } from "./XmlElementView";
 import { XPathNavigator } from "./XPathNavigator";
-import { Navbar } from "react-bootstrap";
+import { Button, Navbar } from "react-bootstrap";
 import { BsSearch } from "react-icons/bs";
 
 interface XmlDocViewProps {
-    content: string;
+    xmlRoot: Document;
+    disposeFile: () => void;
 }
 
 function getXPathNode(
@@ -44,11 +45,7 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
             }
         };
     };
-
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(prop.content, "application/xml");
-    const root = xmlDoc.documentElement as Element;
-    let nodeArray = getXPathNode(xpathExpr, xmlDoc);
+    let nodeArray = getXPathNode(xpathExpr, prop.xmlRoot);
     let nodeSet: Set<Node> = new Set<Node>(nodeArray);
 
     const onKeyDownHandler = (event: React.KeyboardEvent) => {
@@ -63,12 +60,15 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
     };
     return (
         <div>
-            <Navbar sticky="top" bg="light" className="justify-content-end">
+            <Navbar sticky="top" bg="light" className="justify-content-between">
+                <Button variant="danger" onClick={prop.disposeFile}>
+                    Detach document
+                </Button>
                 <Navbar.Brand>
                     <BsSearch />
                 </Navbar.Brand>
                 <XPathNavigator
-                    contextDocument={xmlDoc}
+                    contextDocument={prop.xmlRoot}
                     setExpr={setXPathExpr}
                     onKeyDownHandler={onKeyDownHandler}
                 />
@@ -83,7 +83,7 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
                 }}
             >
                 <XmlElementView
-                    node={root}
+                    node={prop.xmlRoot.documentElement as Element}
                     defaultOpen={true}
                     matchedNodeSet={nodeSet}
                     setDomRefCreator={setDomRefCreator}

@@ -2,7 +2,7 @@ import { useState, ChangeEvent } from "react";
 import { Form, Button } from "react-bootstrap";
 
 type XmlFormProps = {
-    onFileUploaded: (content: string) => void;
+    onFileUploaded: (content: File | null) => void;
 };
 
 const XmlForm: React.FC<XmlFormProps> = (prop: XmlFormProps) => {
@@ -15,9 +15,7 @@ const XmlForm: React.FC<XmlFormProps> = (prop: XmlFormProps) => {
     };
 
     const handleUpload = () => {
-        if (selectedFile) {
-            selectedFile.text().then((v) => prop.onFileUploaded(v));
-        }
+        selectedFile && prop.onFileUploaded(selectedFile);
     };
     return (
         <div>

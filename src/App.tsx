@@ -2,22 +2,23 @@ import "./App.css";
 import { useState } from "react";
 
 import XmlForm from "./XmlForm";
-import XmlDocView from "./XmlDocView";
 import "./App.css";
-import { Button } from "react-bootstrap";
+import { SessionEntry } from "./SessionEntry";
 
 function App() {
-    const [xmlContent, setXmlcontent] = useState<string>("");
+    const [xmlContent, setXmlcontent] = useState<File | null>(null);
     return (
         <>
-            {xmlContent.length === 0 ? (
-                <XmlForm onFileUploaded={setXmlcontent} />
+            {xmlContent ? (
+                <SessionEntry
+                    inputFile={xmlContent}
+                    onDetachDocument={() => {
+                        setXmlcontent(null);
+                    }}
+                />
             ) : (
-                <Button variant="danger" onClick={() => setXmlcontent("")}>
-                    Detach document
-                </Button>
+                <XmlForm onFileUploaded={setXmlcontent} />
             )}
-            <XmlDocView content={xmlContent} />
         </>
     );
 }
