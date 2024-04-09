@@ -88,6 +88,7 @@ const XmlDocView: React.FC<XmlDocViewProps> = (prop: XmlDocViewProps) => {
                     node={prop.xmlRoot.documentElement as Element}
                     defaultOpen={true}
                     matchedNodeSet={nodeSet}
+                    focusNode={nodeArray.at(searchIndex) || null}
                     setDomRefCreator={setDomRefCreator}
                 />
             </div>

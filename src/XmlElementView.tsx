@@ -8,6 +8,7 @@ type XmlNodeViewProps = {
     node: Element;
     defaultOpen: boolean;
     matchedNodeSet: Set<Node>;
+    focusNode: Node | null;
     setDomRefCreator: (
         xmlNode: Node
     ) => (domElement: HTMLElement | null) => void;
@@ -24,6 +25,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                 key={`a-${index}`}
                 attr={attr}
                 matched={matched}
+                focused={prop.focusNode === attr}
                 setDomRef={prop.setDomRefCreator(attr as Node)}
             ></XmlAttrView>
         );
@@ -38,6 +40,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                         defaultOpen={open}
                         matchedNodeSet={prop.matchedNodeSet}
                         key={`e-${index}`}
+                        focusNode={prop.focusNode}
                         setDomRefCreator={prop.setDomRefCreator}
                     ></XmlElementView>
                 );
@@ -49,6 +52,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
                         key={`t-${index}`}
                         text={textNode.data}
                         matched={matched}
+                        focused={prop.focusNode === textNode}
                         setDomRef={prop.setDomRefCreator(node)}
                     ></XmlTextView>
                 );
@@ -63,7 +67,7 @@ export const XmlElementView: React.FC<XmlNodeViewProps> = (
             <span
                 className={`element-rep node-rep ${
                     prop.matchedNodeSet.has(prop.node) && "matched"
-                }`}
+                } ${prop.focusNode === prop.node && "searched"}`}
                 ref={prop.setDomRefCreator(prop.node)}
             >
                 {prop.node.nodeName}
